@@ -1,0 +1,23 @@
+{
+  "skill_name": "project-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I've uploaded my side project, taskman. Please use the project-review skill to give it a thorough review. [Simulated interruption partway through Step 2, followed by a fresh resumption, to exercise the resumability mechanism.]",
+      "expected_output": "A project-review-YYYY-MM-DD folder with README.md (index), 01-summary.md, 02-findings.md, 03-recommendations.md, 04-improvement-prompts.md; the existing TECH-DEBT.md updated in place (existing entries preserved); the planted issues found (hard-coded secret, SQL injection, missing licence, no tests, no CI, inaccessible HTML, outdated pinned dependencies); resumption picks up automatically from the correct checkpoint; worknotes and state file deleted on completion.",
+      "files": ["synthetic project 'taskman' with planted issues and an existing TECH-DEBT.md"]
+    },
+    {
+      "id": 2,
+      "prompt": "Please run a full project review on my Poetic poetry-authoring framework (cloned from github.com/warwickallen/poetic).",
+      "expected_output": "The full document set for a real project; TECH-DEBT.md handled per whether the project has one; findings evidenced with paths and line references; prompts self-contained and using generic model cost tiers only.",
+      "files": ["clone of warwickallen/poetic"]
+    },
+    {
+      "id": 3,
+      "prompt": "Please run a full project review on the 'records' repository I've cloned into the working directory (github.com/kennethreitz/records).",
+      "expected_output": "The full document set for a small, dormant open-source library; a newly created TECH-DEBT.md; realistic governance/maintenance findings.",
+      "files": ["clone of kennethreitz/records"]
+    }
+  ]
+}
