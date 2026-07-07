@@ -167,8 +167,16 @@ symlink command again for each folder you want.  Replace `~/.claude/skills/` (or
 folder if you would rather make a skill available only within that one project,
 rather than in every project.
 
+---
+
+Copyright 2026 Warwick Allen  
+Licensed under CC BY 4.0 — see [LICENCE]
+
 [Agent Skills]:
 https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills
+
+[LICENCE]:
+LICENCE
 
 [Project Review]:
 project-review/SKILL.md
