@@ -1,0 +1,23 @@
+{
+  "skill_name": "project-remediation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I've run project-review on my taskman project. Please use the project-remediation skill to implement the recommendations and clear the tech-debt register. [One recommendation is already implemented in the code but still listed; two register entries overlap review recommendations; a simulated usage-limit is hit partway through, followed by a fresh resumption.]",
+      "expected_output": "A 05-implementation-log.md and remediation-state.json created in the review folder; a merged backlog of work units in which the overlapping recommendation/tech-debt pairs are single units; the already-implemented recommendation detected during reconciliation and marked already-resolved without a subagent being launched; remaining units dispatched to appropriately-tiered subagents using the reviewer's own prompts; each unit verified before being marked resolved; resolved tech-debt entries removed/marked per the register's convention with their IDs cleared; the usage-limit handled by recording the reset time and pausing-or-stopping per the six-hour rule; resumption picking up automatically at the correct unit; the state file deleted and the log retained on completion.",
+      "files": ["synthetic 'taskman' with a reviews/project-review-YYYY-MM-DD/ folder (03/04 present), a TECH-DEBT.md whose entries cite review IDs, and one recommendation already satisfied in the code"]
+    },
+    {
+      "id": 2,
+      "prompt": "Please use project-remediation to work through the tech-debt register on my Poetic project (github.com/warwickallen/poetic) — there's no fresh review to action, just the register.",
+      "expected_output": "Tech-debt-only mode: a remediation/remediation-YYYY-MM-DD/ folder with implementation-log.md and remediation-state.json; the project's own /td skill and scripts/get-tech-debt-record.pl detected and used to work each pure tech-debt item, applying the project's conventions (entry removal, CHANGELOG, Conventional Commits, no commit unless asked); each fix verified against the project's checks before the entry is cleared; overlap with any prior review recommendation handled without double-work; a durable log of outcomes.",
+      "files": ["clone of warwickallen/poetic, including its .claude/skills/td skill and TECH-DEBT.md"]
+    },
+    {
+      "id": 3,
+      "prompt": "Action the recommendations from my latest project review, and commit each one as you go.",
+      "expected_output": "commit_policy recorded as per-item; each verified unit committed separately on a non-default branch when the repo is on its main branch, with a Conventional Commit message; the reviewer prompts' 'do not commit' override adapted to the per-item policy; dependency ordering (Run after) honoured; a security-relevant unit implemented and reviewed at a high-capability tier; the log recording the commit hash as evidence for each unit.",
+      "files": ["a project with a completed review folder and a mix of Small/Medium/Large and one security recommendation"]
+    }
+  ]
+}

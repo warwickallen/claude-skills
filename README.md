@@ -8,9 +8,10 @@ what you want, and Claude loads the relevant skill automatically.
 
 ## Skills
 
-| Skill            | Summary |
-| ---------------- | ------- |
-| [Project Review] | Runs a broad, evidence-based review of a software project and produces a set of linked reports covering a summary, detailed findings, prioritised recommendations, a tech-debt register, and ready-to-use prompts for an AI agent to implement each recommendation. |
+| Skill                 | Summary |
+| --------------------- | ------- |
+| [Project Review]      | Runs a broad, evidence-based review of a software project and produces a set of linked reports covering a summary, detailed findings, prioritised recommendations, a tech-debt register, and ready-to-use prompts for an AI agent to implement each recommendation. |
+| [Project Remediation] | The counterpart to Project Review: works through the review's recommendations and the project's tech-debt register as one merged backlog, dispatches each item to a cost-appropriate subagent using the reviewer's own prompts, verifies the result, and keeps a durable, resumable record of what has been resolved — pausing rather than failing when usage quota runs low. |
 
 This table will grow as new skills are added to the repository.
 
@@ -180,6 +181,9 @@ LICENCE
 
 [Project Review]:
 skills/project-review/SKILL.md
+
+[Project Remediation]:
+skills/project-remediation/SKILL.md
 
 [download-directory.github.io]:
 https://download-directory.github.io/
