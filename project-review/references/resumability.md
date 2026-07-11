@@ -4,15 +4,16 @@ A full project review is a large piece of work, and it may be interrupted before
 
 ## The state file and working notes
 
-Everything needed to resume lives inside the review output folder:
+Everything needed to resume lives inside the review output folder, a dated subdirectory of `reviews/`:
 
 ```
-project-review-YYYY-MM-DD/
-├── review-state.json      # progress ledger (schema below)
-└── worknotes/             # raw material, written incrementally
-    ├── project-map.md     # Step 1 output: inventory, structure, purpose, size
-    ├── findings-<CODE>.md # one per dimension, written the moment the dimension is done
-    └── consolidated.md    # Step 3 output: rated findings and the recommendation list
+reviews/
+└── project-review-YYYY-MM-DD/
+    ├── review-state.json      # progress ledger (schema below)
+    └── worknotes/             # raw material, written incrementally
+        ├── project-map.md     # Step 1 output: inventory, structure, purpose, size
+        ├── findings-<CODE>.md # one per dimension, written the moment the dimension is done
+        └── consolidated.md    # Step 3 output: rated findings and the recommendation list
 ```
 
 `review-state.json` schema (write it atomically — write to a temporary file and rename — so a power cut cannot leave it half-written):
@@ -60,7 +61,7 @@ Checkpoint at every one of these moments, by writing the relevant worknotes file
 
 ## Resuming
 
-At the very start of Step 0, before anything else, look for `project-review-*/review-state.json` under the project root (and, in the Claude.ai chat, among the uploads — the user may have uploaded a partial review folder alongside the project). If one is found with a status other than `complete`:
+At the very start of Step 0, before anything else, look for `reviews/project-review-*/review-state.json` under the project root (and, in the Claude.ai chat, among the uploads — the user may have uploaded a partial review folder alongside the project). If one is found with a status other than `complete`:
 
 1. Read the state file and every existing worknotes file. Together with the review documents already written, these restore the session's knowledge; do not redo completed steps.
 2. Verify the revision. If the project's current revision matches the state file, resume **automatically**: tell the user, in one sentence, that an interrupted review from `<started>` is being resumed at `<first pending item>`, and carry on. Do not ask permission — automatic resumption is the designed behaviour.

@@ -27,14 +27,14 @@ These matter more than any individual checklist item:
 
 ### Step 0 — Orient
 
-**First, check for an interrupted review.** Reviews are checkpointed to disk so that an interruption (credit exhaustion, a network outage, a power cut) loses almost nothing. Look for a `project-review-*/review-state.json` under the project root (or among the uploads in the Claude.ai chat); if one exists with a status other than `complete`, read `references/resumability.md` and resume from the last checkpoint — automatically, unless the project's revision has changed or the user asked for a fresh review. Only when there is nothing to resume, proceed as follows.
+**First, check for an interrupted review.** Reviews are checkpointed to disk so that an interruption (credit exhaustion, a network outage, a power cut) loses almost nothing. Look for a `reviews/project-review-*/review-state.json` under the project root (or among the uploads in the Claude.ai chat); if one exists with a status other than `complete`, read `references/resumability.md` and resume from the last checkpoint — automatically, unless the project's revision has changed or the user asked for a fresh review. Only when there is nothing to resume, proceed as follows.
 
 Establish the basics before reading any code:
 
 1. **Locate the project.** In Claude Code or Cowork this is normally the working directory or a path the user gives. In the Claude.ai chat it is usually an uploaded archive or folder under `/mnt/user-data/uploads/` — copy it to the working directory before analysis.
 2. **Confirm scope if ambiguous.** If the repository contains multiple projects (a monorepo), or the user's request suggests a narrower focus, ask once, briefly. Otherwise proceed — the skill is manually invoked, so the user has already asked for a full review.
 3. **Check for an existing tech-debt register.** Look for `TECH-DEBT.md`, `TECH_DEBT.md`, `TECHDEBT.md`, `DEBT.md`, or similar (case-insensitive, also under `docs/`). If one exists, it will be **updated in place** in Step 4 — do not create a competing file.
-4. **Decide the output location.** Default: a new folder `project-review-YYYY-MM-DD/` at the project root (today's date). If a folder of that name already exists and holds a *completed* review, append `-2`, `-3`, etc. In the Claude.ai chat, where the real repository is not writable, create the folder under `/mnt/user-data/outputs/` instead and present it to the user at the end.
+4. **Decide the output location.** Default: a new folder `reviews/project-review-YYYY-MM-DD/` under the project root (today's date) — a dated subdirectory of `reviews/`, created if it does not yet exist. If a folder of that name already exists and holds a *completed* review, append `-2`, `-3`, etc. In the Claude.ai chat, where the real repository is not writable, create the folder under `/mnt/user-data/outputs/reviews/` instead and present it to the user at the end.
 5. **Create the folder and the initial `review-state.json`** as described in `references/resumability.md`. From this point on, follow that reference's checkpoint discipline: persist work to `worknotes/` the moment each unit of work finishes, and keep the state file current, so that a fresh session could resume with at most one dimension's work lost.
 
 ### Step 1 — Reconnaissance (breadth)

@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "I've uploaded my side project, taskman. Please use the project-review skill to give it a thorough review. [Simulated interruption partway through Step 2, followed by a fresh resumption, to exercise the resumability mechanism.]",
-      "expected_output": "A project-review-YYYY-MM-DD folder with README.md (index), 01-summary.md, 02-findings.md, 03-recommendations.md, 04-improvement-prompts.md; the existing TECH-DEBT.md updated in place (existing entries preserved); the planted issues found (hard-coded secret, SQL injection, missing licence, no tests, no CI, inaccessible HTML, outdated pinned dependencies); resumption picks up automatically from the correct checkpoint; worknotes and state file deleted on completion.",
+      "expected_output": "A reviews/project-review-YYYY-MM-DD folder with README.md (index), 01-summary.md, 02-findings.md, 03-recommendations.md, 04-improvement-prompts.md; the existing TECH-DEBT.md updated in place (existing entries preserved); the planted issues found (hard-coded secret, SQL injection, missing licence, no tests, no CI, inaccessible HTML, outdated pinned dependencies); resumption picks up automatically from the correct checkpoint; worknotes and state file deleted on completion.",
       "files": ["synthetic project 'taskman' with planted issues and an existing TECH-DEBT.md"]
     },
     {

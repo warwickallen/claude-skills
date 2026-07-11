@@ -12,6 +12,7 @@ Each dimension has a short code, used in finding IDs (`F-<CODE>-<NN>`).
 - How are configuration, secrets, and environment differences handled architecturally?
 - Are there architectural decision records (ADRs) or design documents, and do they match reality?
 - How hard would the most plausible next requirements be to accommodate?
+- **Cross-tool seam consistency.** Where two or more components communicate through a shared file format, on-disk artefact, or wire protocol rather than a shared function call (a writer script and a reader script, a producer and consumer CLI, a client and server), read *both* sides rather than inferring one from the other's docstring or tests, and check that they actually agree on the shape. Then check whether any test exercises the seam end-to-end (round-trips real data through the format/protocol) or whether each side is only tested in isolation against its own assumptions — the latter lets the two drift apart with a fully green suite.
 
 ## CODE — Code quality and maintainability
 
