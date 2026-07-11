@@ -67,7 +67,7 @@ every skill in the repository, you will still upload each one separately.
 **To get a ZIP file for a single skill:**
 
 1.  Open the skill's folder on GitHub (for example, this repository's
-    `project-review` folder) and copy its web address from your browser's
+    `skills/project-review` folder) and copy its web address from your browser's
     address bar.
 2.  Go to a browser-based GitHub folder-downloader, such as
     [download-directory.github.io], paste the address in, and download the ZIP
@@ -122,7 +122,7 @@ pull` for future updates, use a sparse checkout instead:
 git clone --no-checkout https://github.com/warwickallen/claude-skills.git
 cd claude-skills
 git sparse-checkout init --cone
-git sparse-checkout set project-review
+git sparse-checkout set skills/project-review
 git checkout main
 ```
 
@@ -137,10 +137,10 @@ original.
 mkdir -p ~/.claude/skills
 
 # Copy.
-cp -r claude-skills/project-review ~/.claude/skills/
+cp -r claude-skills/skills/project-review ~/.claude/skills/
 
 # Or symlink, as an alternative to copying.
-ln -s "$(pwd)/claude-skills/project-review" ~/.claude/skills/project-review
+ln -s "$(pwd)/claude-skills/skills/project-review" ~/.claude/skills/project-review
 ```
 
 **Windows (PowerShell):**
@@ -150,19 +150,19 @@ New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude\skills" |
   Out-Null
 
 # Copy.
-Copy-Item -Recurse claude-skills\project-review `
+Copy-Item -Recurse claude-skills\skills\project-review `
   "$env:USERPROFILE\.claude\skills\project-review"
 
 # Or symlink, as an alternative to copying (run PowerShell as Administrator, or
 # enable Developer Mode first).
 New-Item -ItemType SymbolicLink `
   -Path "$env:USERPROFILE\.claude\skills\project-review" `
-  -Target "$(Resolve-Path claude-skills\project-review)"
+  -Target "$(Resolve-Path claude-skills\skills\project-review)"
 ```
 
-Every folder in this repository other than hidden configuration folders (such as
-`.github`) is a skill, so to load several, or all of them, run the same copy or
-symlink command again for each folder you want.  Replace `~/.claude/skills/` (or
+Every folder inside this repository's `skills/` directory is a skill, so to load
+several, or all of them, run the same copy or symlink command again for each
+folder you want.  Replace `~/.claude/skills/` (or
 `$env:USERPROFILE\.claude\skills\`) with a project's own `.claude/skills/`
 folder if you would rather make a skill available only within that one project,
 rather than in every project.
@@ -179,7 +179,7 @@ https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-a
 LICENCE
 
 [Project Review]:
-project-review/SKILL.md
+skills/project-review/SKILL.md
 
 [download-directory.github.io]:
 https://download-directory.github.io/
