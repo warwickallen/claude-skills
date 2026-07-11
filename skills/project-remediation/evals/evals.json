@@ -16,8 +16,14 @@
     {
       "id": 3,
       "prompt": "Action the recommendations from my latest project review, and commit each one as you go.",
-      "expected_output": "commit_policy recorded as per-item; each verified unit committed separately on a non-default branch when the repo is on its main branch, with a Conventional Commit message; the reviewer prompts' 'do not commit' override adapted to the per-item policy; dependency ordering (Run after) honoured; a security-relevant unit implemented and reviewed at a high-capability tier; the log recording the commit hash as evidence for each unit.",
-      "files": ["a project with a completed review folder and a mix of Small/Medium/Large and one security recommendation"]
+      "expected_output": "commit_policy recorded as branch-per-unit; a campaign integration branch cut once off HEAD and recorded in the state file; each verified unit implemented on its own branch cut off the integration-branch tip, with the subagent committing and authoring its own Conventional Commit message rather than the orchestrator reconstructing it; each unit squash-merged into the integration branch only after the orchestrator's verification passes, and the squash-merge commit hash recorded as evidence; a blocked/deferred unit's branch left unmerged; dependency ordering (Run after) honoured so a dependent unit branches off a tip that already contains its prerequisites; a security-relevant unit implemented and reviewed at a high-capability tier; the final integration branch a clean one-commit-per-resolved-unit history, presented to the user for a single merge/PR rather than the orchestrator organising a mingled working tree.",
+      "files": ["a project with a completed review folder and a mix of Small/Medium/Large and one security recommendation, on its main branch"]
+    },
+    {
+      "id": 4,
+      "prompt": "The recommendations from my last review were mostly picked up piecemeal already, but please run project-remediation over them to be sure and clean up anything left.",
+      "expected_output": "A reconciliation pass that carries most of the campaign: nearly every unit checked cheaply against the codebase and git log (no subagents, no quota) and marked already-resolved with the proving commit/file-state recorded as evidence; only the genuinely still-open units left pending and dispatched; the log honestly presenting a mostly-already-resolved outcome as a successful campaign with a resolved/already-resolved/deferred/blocked summary; no subagent launched to redo work reconciliation could prove was done.",
+      "files": ["a project whose review folder's recommendations are almost all already implemented in the code, with one or two genuinely outstanding"]
     }
   ]
 }

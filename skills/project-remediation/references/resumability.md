@@ -35,6 +35,7 @@ Write it atomically — write to a temporary file and rename — so an interrupt
   "tech_debt_file": "<path to the register, or null>",
   "tech_debt_helper": "<how tech-debt items are worked: '/td skill', 'scripts/get-tech-debt-record.pl', or null>",
   "commit_policy": "working-tree",
+  "integration_branch": "<campaign integration branch under branch-per-unit, else null>",
   "started": "<ISO 8601>",
   "updated": "<ISO 8601 — refresh at every checkpoint>",
   "quota": {
@@ -54,7 +55,8 @@ Write it atomically — write to a temporary file and rename — so an interrupt
       "run_after": [],
       "tier": "<low | mid | high, once chosen>",
       "status": "pending",
-      "evidence": "<commit hashes / paths proving the outcome, once known>",
+      "branch": "<unit branch name under branch-per-unit, else null>",
+      "evidence": "<commit hashes / paths proving the outcome, once known — under branch-per-unit, the squash-merge commit on the integration branch>",
       "notes": "<verification result, deferral/block reason, suggested commit message>"
     }
   ]
@@ -63,7 +65,7 @@ Write it atomically — write to a temporary file and rename — so an interrupt
 
 Unit `status` values: `pending` (reconciled as still open), `already-resolved` (found done during reconciliation), `in-progress` (a subagent is working it), `resolved` (implemented and verified), `deferred` (consciously postponed, with reason), `blocked` (cannot proceed, with reason). Top-level `status` is `in-progress` until every unit is terminal, then the state file is deleted rather than set to `complete`.
 
-`commit_policy` is `working-tree` by default (leave changes uncommitted, record a suggested message per unit) or `per-item` only if the user asked for commits — see `subagent-dispatch.md`.
+`commit_policy` is `working-tree` by default (leave changes uncommitted, record a suggested message per unit) or `branch-per-unit` only if the user asked for commits — each unit on its own branch, committed by its subagent, squash-merged into `integration_branch` on green (see `subagent-dispatch.md`). Under `branch-per-unit`, a resumed run reads `integration_branch` from the state file and continues on it rather than cutting a new one.
 
 ## Checkpoint discipline
 

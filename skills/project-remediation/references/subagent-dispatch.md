@@ -25,7 +25,9 @@ Send the **reviewer's improvement prompt verbatim** as the body of the task. It 
 Wrap it in a short **orchestration header** that the prompt itself cannot know:
 
 - Which repository and review folder this is part of, and the unit ID.
-- **A commit-policy override.** The reviewer's prompt often ends "produce a single commit". Unless this run's `commit_policy` is `per-item`, override that: *"Do not commit or push. Leave your changes in the working tree and report a suggested Conventional Commit subject line instead."* This keeps commit control with the user, matching the environment's default and the project's own tech-debt skill. If `commit_policy` is `per-item`, instead instruct the subagent to make one focused commit (on a non-default branch if the repo is on its main branch).
+- **A commit-policy override.** The reviewer's prompt often ends "produce a single commit"; override it to match this run's `commit_policy`:
+  - **`working-tree`** (the default): *"Do not commit or push. Leave your changes in the working tree and report a suggested Conventional Commit subject line instead."* This keeps commit control with the user, matching the environment's default and the project's own tech-debt skill.
+  - **`branch-per-unit`** (when the user wants commits): tell the subagent which branch it is on — one the orchestrator created for this unit off the integration-branch tip — and instruct it to *commit its own work on that branch and no other, authoring a good Conventional Commit message from the context it has, and not to push, merge, or switch branches.* The subagent may make more than one commit if that is natural; the orchestrator squashes them at merge time. Letting the subagent author the message is the point — it holds the exact context, so the orchestrator never has to reconstruct it from a mingled diff.
 - A instruction to **report back** concretely: the files changed, the exact verification commands run and their output, anything it could not do, and — if it discovered the recommendation was already satisfied or is no longer valid — to say so rather than manufacture a change.
 - For a **merged unit**, the IDs it covers, so the subagent's report can be tied to all of them.
 
@@ -46,6 +48,17 @@ Only when verification passes is the unit `resolved`. If it fails:
 - **Retry** once, and consider raising the tier if a cheap attempt produced a wrong or incomplete result.
 - If it still fails, mark the unit `blocked` (a genuine obstacle: a missing credential, an upstream bug, a failing test the fix cannot satisfy) or `deferred` (a conscious postponement, e.g. a dependency major-bump that churns golden fixtures), and record the reason in the log. A recommendation whose acceptance criteria cannot be met without violating a constraint is reported back, not forced through — the reviewer's criteria are the contract.
 
+## Integrating under `branch-per-unit`
+
+When the run commits (`commit_policy` is `branch-per-unit`), the branches form a clean history so the orchestrator never has to untangle a shared working tree:
+
+- **One integration branch per campaign**, cut once off the starting HEAD (`remediation/<date>`). The user's default branch is left untouched; all clean per-unit commits accumulate here.
+- **One branch per unit**, cut off the *current integration-branch tip* at dispatch — not off the original HEAD. Because dependencies are ordered earlier in the queue and merged before their dependents dispatch, branching off the tip means a dependent unit's subagent sees its prerequisites' committed work, exactly as sequential subagents in a shared tree would.
+- **Squash-merge on green.** Only after the orchestrator's own verification passes, squash-merge the unit branch into the integration branch as a single commit, reusing the subagent's authored message. Squashing collapses any messy intermediate commits into one clean, reviewable unit of history. Record the resulting commit hash as the unit's evidence; the unit branch can then be deleted.
+- **Never squash-merge a unit that did not verify.** A `blocked` or `deferred` unit's branch is left unmerged (and noted in the log) so nothing unverified reaches the integration branch.
+
+The final integration branch is a linear, one-commit-per-resolved-unit history. The user's remaining action is a single review-and-merge (or a PR) into their default branch — the "series of squash-merges" is already done, cheaply, by the orchestrator as each unit passed. This is deliberately the opposite of leaving every unit's changes mingled in one working tree for someone to reconstruct commit boundaries and messages afterwards.
+
 ## Recording the outcome
 
-For every terminal unit, the log entry records: the IDs cleared, the route taken (which tier, or which tech-debt skill), what changed (paths), the verification commands and their result, the suggested Conventional Commit subject, and — for `deferred`/`blocked` — the reason and any follow-up. Then clear every ID the unit carries, as `SKILL.md` Step 3 describes, and checkpoint.
+For every terminal unit, the log entry records: the IDs cleared, the route taken (which tier, or which tech-debt skill), what changed (paths), the verification commands and their result, the suggested Conventional Commit subject (and, under `branch-per-unit`, the squash-merge commit hash on the integration branch), and — for `deferred`/`blocked` — the reason and any follow-up. Then clear every ID the unit carries, as `SKILL.md` Step 3 describes, and checkpoint.

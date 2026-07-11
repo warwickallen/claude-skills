@@ -49,13 +49,15 @@ Guard against cycles in the dependency graph; if one appears, break it by severi
 
 ## Reconciling against reality (Step 2)
 
+This pass can do more of the campaign's real work than the dispatch that follows. A review may already be substantially implemented before it is formally actioned — earlier sessions, piecemeal fixes, out-of-band work — so a large share of units, possibly nearly all, may already be resolved on arrival. And it is *cheap*: file reads and `git log`, no subagents, no quota. Spend the effort here without stinting — proving an item done costs a few queries, whereas dispatching a subagent to redo finished work costs the dispatch, the verification of a redundant result, and possibly quota. Lean toward proving done.
+
 For every unit, before it is dispatched, establish whether it is *already done*:
 
 - Read the unit's intended end state and check the current codebase against it directly — does the file exist, is the field set, is the check in place?
 - Search the git log for commits implementing it: by finding/recommendation/tech-debt ID, by the changed paths the recommendation names, or by the described change.
-- A tech-debt entry that is still present in the register but whose fix is already in the code is a common case on a resumed run or after out-of-band work — mark it `already-resolved` and, per the register's convention, still remove/mark the stale entry.
+- A tech-debt entry that is still present in the register but whose fix is already in the code can occur on a resumed run or after out-of-band work — mark it `already-resolved` and, per the register's convention, still remove/mark the stale entry.
 
-Mark satisfied units `already-resolved` with the evidence recorded; leave the rest `pending`. Doing this as its own pass — rather than lazily at dispatch — means the quota planning and ordering in Step 3 work from an accurate count of what actually remains.
+Mark satisfied units `already-resolved` with the evidence recorded so a reader can verify it; leave the rest `pending`. Doing this as its own deliberate pass — rather than lazily at dispatch — means the quota planning and ordering in Step 3 work from an accurate count of what actually remains, and a mostly-already-done campaign is recognised as such before a single subagent is spent.
 
 ## Removing or marking a resolved tech-debt entry
 
