@@ -14,8 +14,8 @@ From the review folder (the latest `reviews/project-review-*/`):
 
 From the register located in Step 0:
 
-- If the project ships a **resolver** (for example `scripts/get-tech-debt-record.pl`, which prints each record as a YAML map of `id`, `title`, `body`, and line numbers and exits with `matches − 1`), use it to enumerate and later to locate records precisely — it already knows the project's ID scheme and file location.
-- Otherwise read the register directly, splitting on its entry headings. Preserve each entry's ID and its full body (the body usually states the fix and often cites the review IDs that motivated it).
+- If the project ships a **resolver** (for example `scripts/get-tech-debt-record.pl`, which suffix-matches a segment against both `id` and `legacy-id` and prints each match as a YAML map of `id`, optional `legacy-id`, `title`, `status`, `path`, and `body` — there are no line numbers in resolver output any more — exiting with `matches − 1`), use it to enumerate and later to locate records precisely — it already knows the project's ID scheme and file location.
+- Otherwise read the register directly. For a **per-item** register (a `tech-debt/` directory), enumerate one item per `tech-debt/*.md` file, reading each file's frontmatter and body directly. For a **legacy** register (a single `TECH-DEBT.md`), split the file on its entry headings. Either way, preserve each entry's ID and its full body (the body usually states the fix and often cites the review IDs that motivated it).
 
 ## Detecting and merging overlap
 
@@ -59,11 +59,12 @@ For every unit, before it is dispatched, establish whether it is *already done*:
 
 Mark satisfied units `already-resolved` with the evidence recorded so a reader can verify it; leave the rest `pending`. Doing this as its own deliberate pass — rather than lazily at dispatch — means the quota planning and ordering in Step 3 work from an accurate count of what actually remains, and a mostly-already-done campaign is recognised as such before a single subagent is spent.
 
-## Removing or marking a resolved tech-debt entry
+## Resolving a tech-debt entry
 
 Follow the **register's own convention**, discovered in Step 0 — do not impose one:
 
-- If the register's header or the project's `CLAUDE.md`/tech-debt skill says resolved entries are **deleted**, delete the whole entry (locate it by its ID heading, not by stored line numbers, which drift once editing begins) and remove any in-code references the entry names.
-- If the register **marks** resolved entries (a status line, a strikethrough), mark it in that style and leave it in place.
+- **Per-item register:** resolve the item by editing only its `tech-debt/<id>.md` frontmatter — `status: resolved`, `resolved:` the date, `ref:` the PR or commit — and leave the body untouched. The file is never deleted or renamed; the resolved file is the item's permanent record. Remove any in-code references the entry names.
+- **Legacy register, deletion convention:** if the register's header or the project's `CLAUDE.md`/tech-debt skill says resolved entries are **deleted**, delete the whole entry (locate it by its ID heading, not by stored line numbers, which drift once editing begins) and remove any in-code references the entry names.
+- **Legacy register, marking convention:** if the register **marks** resolved entries (a status line, a strikethrough) instead of deleting them, mark it in that style and leave it in place.
 
-When a project tech-debt skill exists, prefer letting *it* perform the removal, so the project's exact convention is applied — but still confirm the entry is gone (or marked) before you consider the unit resolved.
+When a project tech-debt skill exists, prefer letting *it* perform the resolution, so the project's exact convention is applied — but still confirm the entry is resolved (frontmatter flipped, deleted, or marked, as its format demands) before you consider the unit resolved.
